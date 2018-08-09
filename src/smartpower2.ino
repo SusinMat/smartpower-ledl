@@ -621,8 +621,8 @@ void printInfo_LCD(void)
 
 void readPower(void)
 {
-    volt = ina231_read_voltage();
-    watt = ina231_read_power();
+    //volt = ina231_read_voltage();
+    // watt = ina231_read_power();
     ampere = ina231_read_current();
 }
 
@@ -769,7 +769,7 @@ void handler(void)
         btnChanged = 0;
     }
 
-    if (connectedWeb) {
+    if (connectedWeb && 0) {
         if (onoff == ON) {
             String data = String(DATA_PVI);
             data += String(watt, 3) + "," + String(volt, 3) + "," + String(ampere, 3);
@@ -781,7 +781,7 @@ void handler(void)
         }
     }
 
-    if (logClient && logClient.connected())
+    if (logClient && logClient.connected() && 0)
     {
         // Report the log info
         String data = String(volt, 3) + "," + String(ampere, 3) + "," +
