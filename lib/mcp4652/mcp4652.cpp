@@ -72,8 +72,27 @@ unsigned short ina231_read16(unsigned char pointer_addr)
 void ina231_configure(void)
 {
 	unsigned short config;
+	// http://www.ti.com/lit/ds/symlink/ina231.pdf PG 22
+	// ORIGINAL
+	// config = 0x45ff;
+	// fedc ba9 876 543 210
+	// 0100 010 111 111 111
+	// 16 avg
+	// 8.244ms vbus
+	// 8.244ms vshunt
+	// shunt and bus continuous
 
-	config = 0x45ff;
+	// NEW ~ 1kHz
+	// config = 0x424f;
+	// 0100 0010 0100 1111
+	// fedc ba9 876 543 210
+	// 0100 001 001 001 111
+	// 4 avg = 001
+	// 204ms vbus = 001
+	// 204us vshunt = 001
+	// shunt && bus continuous = 001
+
+	config = 0x424f;
 	ina231_write(INA231_REG_CONFIG, config);
 	config = 0x08bd;
 	ina231_write(INA231_REG_CALIBRATION, config);
