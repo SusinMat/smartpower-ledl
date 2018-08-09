@@ -771,7 +771,8 @@ void handler(void)
 
 			if(output_counter_loop > 9) output_counter_loop = 0;
 		} else {
-			data_serial = "#" + String(output_counter_loop%10) + "," + String(ampere, 3) + "\r\n";
+			//data_serial = "#" + String(output_counter_loop%10) + "," + String(ampere, 3) + "\r\n";
+			data_serial = String(output_counter_loop%10) + "," + String(ampere, 3) + ",";
 			USE_SERIAL.print(data_serial.c_str());
 			output_counter_loop++;
 			if(output_counter_loop > 9) output_counter_loop = 0;
