@@ -83,16 +83,26 @@ void ina231_configure(void)
 	// shunt and bus continuous
 
 	// NEW ~ 1kHz
-	// config = 0x424f;
-	// 0100 0010 0100 1111
+	// config = 0x4249;
+	// 0100 0010 0100 1001
 	// fedc ba9 876 543 210
-	// 0100 001 001 001 111
+	// 0100 001 001 001 001
 	// 4 avg = 001
 	// 204ms vbus = 001
 	// 204us vshunt = 001
 	// shunt && bus continuous = 001
 
-	config = 0x424f;
+	// NEW ~ 2kHz
+	// config = 0x4009;
+	// 0100 0000 0000 1001
+	// fedc ba9 876 543 210
+	// 0100 000 000 001 001
+	// 1 avg = 000
+	// 140ms vbus = 000
+	// 204us vshunt = 001
+	// shunt && bus continuous = 001
+
+	config = 0x4249;
 	ina231_write(INA231_REG_CONFIG, config);
 	config = 0x08bd;
 	ina231_write(INA231_REG_CALIBRATION, config);
