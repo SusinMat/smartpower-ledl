@@ -41,6 +41,9 @@ WiFiClient logClient;
 #define MEASUREWATTHOUR		'm'
 #define FW_VERSION			'f'
 
+#define ACTIVATE_BUFFER 0
+#define BUFFER_SIZE 10
+
 #define FWversion	1.4
 
 uint8_t onoff = OFF;
@@ -64,7 +67,9 @@ float ampere;
 float watt;
 double watth;
 
+uint16_t buffer_counter;
 uint8_t output_counter_loop;
+String data_serial;
 
 #define MAX_SRV_CLIENTS 1
 
@@ -95,6 +100,10 @@ void setup() {
 
     pinMode(BTN_ONOFF, INPUT);
     attachInterrupt(digitalPinToInterrupt(BTN_ONOFF), pinChanged, CHANGE);
+
+	output_counter_loop = 0;
+	buffer_counter = 0;
+	String data_serial = "";
 
     for (uint8_t t = 4; t > 0; t--) {
         USE_SERIAL.printf("[SETUP] BOOT WAIT %d...\n\r", t);
@@ -745,10 +754,28 @@ void handler(void)
         /* String data_serial = "##" + String(output_counter_loop) + "," + String(volt, 3) + "," + String(ampere, 3) + "," + */
         /*                      String(watt, 3) + "," + String(watth / 3600, 3) + "\r\n"; */
 
-        String data_serial = String(output_counter_loop%10) + "," + String(ampere, 3) + "\r\n";
+		if(ACTIVATE_BUFFER){
+			if(buffer_counter == 0){
+				data_serial = data_serial + "\r\n";
+				USE_SERIAL.print(data_serial.c_str());
+				data_serial = "#" + String(output_counter_loop%10) + "," + String(ampere, 3);
+				output_counter_loop++;
+			} else {
+				data_serial = data_serial + "," + String(ampere, 3);
+			}
 
-		output_counter_loop++;
-	    USE_SERIAL.print(data_serial.c_str());
+			buffer_counter++;
+			if(buffer_counter > BUFFER_SIZE-1){
+				buffer_counter = 0;
+			}
+
+			if(output_counter_loop > 9) output_counter_loop = 0;
+		} else {
+			data_serial = "#" + String(output_counter_loop%10) + "," + String(ampere, 3) + "\r\n";
+			USE_SERIAL.print(data_serial.c_str());
+			output_counter_loop++;
+			if(output_counter_loop > 9) output_counter_loop = 0;
+		}
     }
 
     if (connectedLCD) {
