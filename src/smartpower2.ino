@@ -374,7 +374,7 @@ void fs_init(void)
     readNetworkConfig();
 
     File f2 = SPIFFS.open("/txt/settings.txt", "w");
-    f2.println("autorun=0");
+    f2.println("autorun=1");
     f2.println("voltage=5.00");
     f2.println("firstboot=0");
     f2.flush();
